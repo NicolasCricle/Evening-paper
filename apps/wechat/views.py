@@ -1,15 +1,16 @@
-from flask import request
+from flask import request, current_app
 from . import wechat
 import hashlib
 
 
 @wechat.route("/index")
 def index():
-    return "hello world!"
+    return "hello world!!!"
 
 
 @wechat.route("/message", methods=["GET", "POST"])
 def message():
+    # 接入验证
     if request.method == "GET":
         s = request.args.get("signature")
         t = request.args.get("timestamp")
@@ -26,3 +27,9 @@ def message():
 
         if ms==s:
             return e
+    # 消息处理
+    else:
+        current_app.logger.info(str(request.stream.read()))
+        current_app.logger.debug(str(request.data))
+
+        return ""
