@@ -5,14 +5,14 @@ import hashlib
 
 @wechat.route("/index")
 def index():
-    return "hello world!???===000"
+    return "hello world!"
 
 
 @wechat.route("/message", methods=["GET", "POST"])
 def message():
     if request.method == "GET":
         s = request.args.get("signature")
-        t = request.args.get("timestimp")
+        t = request.args.get("timestamp")
         n = request.args.get("nonce")
         e = request.args.get("echostr")
 
