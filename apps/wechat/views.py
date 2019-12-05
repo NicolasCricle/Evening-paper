@@ -20,7 +20,7 @@ def message():
         data = [token, t, n]
         data.sort()
 
-        temp= "".join(data)
+        temp= "".join(data).encode("utf-8")
 
         ms = hashlib.sha1(temp).hexdigest()
 
