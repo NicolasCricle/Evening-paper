@@ -47,7 +47,7 @@ def message():
 
             data, message = get_sales_num(replay.receiveContent)
             if data:
-                reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get("sales")}"
+                reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('sales')}"
                 # 数据写入数据库
                 rece = ReceiveMessage(content=reply.receiveContent, userId=user.id)
                 db.session.add(rece)
