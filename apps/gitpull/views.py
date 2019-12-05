@@ -3,7 +3,7 @@ from flask import request, jsonify
 from . import git
 
 
-@git.route("/reload")
+@git.route("/reload", methods=["POST"])
 def reload():
     os.system("cd /var/www/Evening-paper && git pull")
     os.system("supervisorctl reload")
