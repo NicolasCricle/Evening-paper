@@ -11,7 +11,6 @@ class WechatMessage(object):
         self.secret = "713feb00fef3f0922d73f788f3a84b7c"
     
 
-
 class ReplyMessage(WechatMessage):
 
     def __init__(self, request):
@@ -30,6 +29,14 @@ class ReplyMessage(WechatMessage):
         self.msgId = xmlDict.get("MsgId")
 
     @property
+    def receiveContent(self):
+        return self.content
+
+    @property
+    def fromWho(self):
+        return self.fromUser
+
+    @property
     def text(self):
         return self._xml
 
@@ -43,9 +50,18 @@ class ReplyMessage(WechatMessage):
                      f'<Content><![CDATA[{value}]]></Content></xml>'
 
 
-def main():
-    pass
+
+def get_sales_num(content):
+    content = content.split()
+    if len(content) != 2:
+        return None, "销售的数据格式为：销售人  销售数额！"
+    try:
+        salesNum = int(content[1])
+    except Exception as e:
+        return None, "销售数额必须是数字"
+    else:
+        return {"name": content[0], "salesNum": salesNum}, ""
 
 
 if __name__ == "__main__":
-    main()
+    pass

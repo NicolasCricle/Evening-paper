@@ -1,6 +1,7 @@
 import logging
 import platform
 from flask import Flask
+
 from configs import Config, configMap
 
 
@@ -17,6 +18,9 @@ def create_app(configName):
     app.register_blueprint(git)
 
     cerate_logger(app)
+
+    from apps.wechat.models import db
+    db.init_app(app)
 
     return app
 
