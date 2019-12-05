@@ -9,7 +9,7 @@ def create_app(configName):
     app.config.from_object(configMap[configName])
     
     from .wechat import wechat
-    app.register_blueprint(wechat)
+    app.register_blueprint(wechat, url_prefix='/wechat')
 
     from .gitpull import git
     app.register_blueprint(git)
