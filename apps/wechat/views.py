@@ -6,6 +6,7 @@ from flask import request, current_app, make_response
 from . import wechat
 from .utils import ReplyMessage, get_sales_num
 from .handlers import dispatch
+from .models import db
 
 
 

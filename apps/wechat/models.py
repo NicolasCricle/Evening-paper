@@ -22,7 +22,7 @@ class SalesRecord(db.Model):
 
     @classmethod
     def sum_sales(cls):
-        rds = cls.query.filter(date==datetime.date.today()).all()
+        rds = cls.query.filter(cls.date==datetime.date.today()).all()
         temp = dict()
         for rd in rds:
             if rd.saler in temp:
