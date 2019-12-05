@@ -30,8 +30,11 @@ def message():
             return e
     # 消息处理
     else:
-        reply = ReplyMessage(request)
-        reply.text = "您好！"
+        try:
+            reply = ReplyMessage(request)
+            reply.text = "您好！"
+        except Exception as e:
+            current_app.logger.error(str(e))
 
         response = make_response(reply.text)
         response.content_type = 'application/xml'
