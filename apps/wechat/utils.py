@@ -35,8 +35,8 @@ class ReplyMessage(WechatMessage):
 
     @text.setter
     def text(self, value):
-        self._xml = f'<xml><ToUserName><![CDATA[{self.FromUserName}]]></ToUserName>' \
-                    f'<FromUserName><![CDATA[{self.ToUserName}]]></FromUserName>' \
+        self._xml = f'<xml><ToUserName><![CDATA[{self.fromUser}]]></ToUserName>' \
+                    f'<FromUserName><![CDATA[{self.toUser}]]></FromUserName>' \
                     f'<CreateTime>{str(int(time.time()))}</CreateTime>'
 
         self._xml += f'<MsgType><![CDATA[text]]></MsgType>'\
