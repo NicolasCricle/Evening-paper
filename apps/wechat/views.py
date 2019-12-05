@@ -40,12 +40,13 @@ def message():
 
             data, message = get_sales_num(reply.receiveContent)
             if data:
-                reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('sales')}"
+                reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('salesNum')}"
                 # 数据写入数据库
                 rece = ReceiveMessage(content=reply.receiveContent, openId=reply.fromWho)
                 db.session.add(rece)
+                db.session.flush()
 
-                sales = SalesRecord(saler=data.get("name"), saleNum=data.get("sales"), messageId=rece.id)
+                sales = SalesRecord(saler=data.get("name"), saleNum=data.get("salesNum"), messageId=rece.id)
                 db.session.add(sales)
 
                 db.session.commit()
