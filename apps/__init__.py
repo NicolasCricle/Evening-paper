@@ -11,4 +11,7 @@ def create_app(configName):
     from .wechat import wechat
     app.register_blueprint(wechat)
 
+    from .gitpull import git
+    app.register_blueprint(git)
+
     return app
