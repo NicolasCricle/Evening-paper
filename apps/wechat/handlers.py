@@ -60,7 +60,7 @@ class AddSalersNum(BaseRes):
         db.session.add(rd)
         db.session.commit()
 
-        sign = "加" if sales > 0 else "减" 
+        sign = "加" if int(sales) > 0 else "减" 
         return f"操作成功\n{name} 今日销售额 {sign} {abs(sales)}"
 
 

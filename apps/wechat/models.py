@@ -32,7 +32,7 @@ class SalesRecord(db.Model):
 
         sumList = [{"saler": name, "salesNum": salesNum} for name, salesNum in temp.items()]
 
-        sorted(sumList, key=lambda x: x.get(salesNum))
+        sorted(sumList, key=lambda x: x.get("salesNum"))
         return sumList
 
         
