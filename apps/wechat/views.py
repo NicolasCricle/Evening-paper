@@ -4,8 +4,7 @@ import hashlib
 from flask import request, current_app, make_response
 
 from . import wechat
-from .utils import ReplyMessage, get_sales_num
-from apps.wechat.models import SalesRecord, ReceiveMessage, db
+from .utils import ReplyMessage, get_sales_num, dispatch
 
 
 
@@ -38,20 +37,8 @@ def message():
         try:
             reply = ReplyMessage(request)
 
-            data, message = get_sales_num(reply.receiveContent)
-            if data:
-                reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('salesNum')}"
-                # 数据写入数据库
-                rece = ReceiveMessage(content=reply.receiveContent, openId=reply.fromWho)
-                db.session.add(rece)
-                db.session.flush()
-
-                sales = SalesRecord(saler=data.get("name"), saleNum=data.get("salesNum"), messageId=rece.id)
-                db.session.add(sales)
-
-                db.session.commit()
-            else:
-                reply.text = message
+            handler = dispatch(reply.receiveContent, reply.fromWho)
+            reply.text = handler.get_message()
 
         except Exception as e:
             current_app.logger.error(traceback.format_exc())
