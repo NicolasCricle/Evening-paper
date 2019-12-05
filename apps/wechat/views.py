@@ -38,7 +38,7 @@ def message():
         try:
             reply = ReplyMessage(request)
 
-            data, message = get_sales_num(replay.receiveContent)
+            data, message = get_sales_num(reply.receiveContent)
             if data:
                 reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('sales')}"
                 # 数据写入数据库
