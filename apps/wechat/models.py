@@ -36,5 +36,5 @@ class ReceiveMessage(db.Model):
     openId = db.Column(db.String(50))
     # userId = db.Column(db.Integer, db.ForeignKey('MyUser.id'))
 
-    sales = db.relationship("SalesRecord",backref='message',lazy='dynamic', uselist=False)
+    sales = db.relationship("SalesRecord",backref='message', uselist=False)
 
