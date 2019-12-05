@@ -1,5 +1,6 @@
-from flask import request, current_app
+from flask import request, current_app, make_response
 from . import wechat
+from .utils import ReplyMessage
 import hashlib
 
 
@@ -29,7 +30,10 @@ def message():
             return e
     # 消息处理
     else:
-        current_app.logger.info(str(request.stream.read()))
-        current_app.logger.debug(str(request.data))
+        reply = ReplyMessage(request)
+        reply.text = "您好！"
 
-        return ""
+        response = make_response(reply.text)
+        response.content_type = 'application/xml'
+
+        return response
