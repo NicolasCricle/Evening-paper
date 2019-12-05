@@ -11,10 +11,10 @@ def create_app(configName):
 
     app.config.from_object(configMap[configName])
     
-    from .wechat import wechat
+    from apps.wechat import wechat
     app.register_blueprint(wechat, url_prefix='/wechat')
 
-    from .gitpull import git
+    from apps.gitpull import git
     app.register_blueprint(git)
 
     cerate_logger(app)
