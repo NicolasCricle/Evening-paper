@@ -1,7 +1,10 @@
+import traceback
+import hashlib
+
 from flask import request, current_app, make_response
 from . import wechat
+
 from .utils import ReplyMessage
-import hashlib
 
 
 @wechat.route("/index")
@@ -34,7 +37,7 @@ def message():
             reply = ReplyMessage(request)
             reply.text = "您好！"
         except Exception as e:
-            current_app.logger.error(str(e))
+            current_app.logger.error(traceback.format_exc())
 
         response = make_response(reply.text)
         response.content_type = 'application/xml'

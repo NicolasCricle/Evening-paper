@@ -1,3 +1,4 @@
+import time
 import xmltodict
 
 
@@ -16,7 +17,7 @@ class ReplyMessage(WechatMessage):
     def __init__(self, request):
         super().__init__(request)
         self._xmlStr = request.stream.read()
-        self.init_xml(self._xmlStr)
+        self.init_xml()
         self._xml = None
 
     def init_xml(self):
