@@ -24,5 +24,5 @@ def message():
 
         ms = hashlib.sha1(temp).hexdigest()
 
-        if ms==m:
+        if ms==s:
             return e
