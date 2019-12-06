@@ -48,7 +48,7 @@ class StatementHandler(BaseHandler):
         message = ""
         for item in sumList:
             message += f'{item.get("saler")}今天的销售额是：{item.get("salesNum")}\n'
-
+        if not message: message = "今日暂无销售额"
         return message
 
 
