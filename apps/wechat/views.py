@@ -4,15 +4,14 @@ import hashlib
 from flask import request, current_app, make_response
 
 from . import wechat
-from .utils import ReplyMessage, get_sales_num
+from .utils import ReplyMessage
 from .handlers import dispatch
 from .models import db
 
 
-
 @wechat.route("/index")
 def index():
-    return "hello world!!!"
+    return "test route"
 
 
 @wechat.route("/message", methods=["GET", "POST"])
@@ -24,7 +23,7 @@ def message():
         n = request.args.get("nonce")
         e = request.args.get("echostr")
 
-        token = "Z470588044L"
+        token = current_app.config.get("WECHAT_TOKEN")
         data = [token, t, n]
         data.sort()
 
@@ -39,22 +38,10 @@ def message():
         try:
             reply = ReplyMessage(request)
 
-            handler = dispatch(reply.receiveContent, reply.fromWho)
+            handler = dispatch(db, reply.receiveContent, openId=reply.fromWho)
+            handler.save_message()
+
             reply.text = handler.get_message()
-            # data, message = get_sales_num(reply.receiveContent)
-            # if data:
-            #     reply.text = f"操作成功，{data.get('name')}的 销售数额 {data.get('salesNum')}"
-            #     # 数据写入数据库
-            #     rece = ReceiveMessage(content=reply.receiveContent, openId=reply.fromWho)
-            #     db.session.add(rece)
-            #     db.session.flush()
-
-            #     sales = SalesRecord(saler=data.get("name"), saleNum=data.get("salesNum"), messageId=rece.id)
-            #     db.session.add(sales)
-
-            #     db.session.commit()
-            # else:
-            #     reply.text = message
 
         except Exception as e:
             current_app.logger.error(traceback.format_exc())

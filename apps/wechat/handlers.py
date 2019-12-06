@@ -1,5 +1,5 @@
 import re
-from apps.wechat.models import SalesRecord, ReceiveMessage, DailyReport, db
+from apps.wechat.models import SalesRecord, ReceiveMessage, DailyReport
 
 
 class Regex(object):
@@ -11,35 +11,37 @@ salerRe = re.compile(Regex.SALER_REGEX)
 salesNumRe = re.compile(Regex.SALES_NUM_REGEX)
 
 
-def dispatch(content, openId):
+def dispatch(db, content, **kwargs):
     if content == "今日":
-        return Statement(content, openId)
+        return StatementHandler(content, **kwargs)
     elif salerRe.match(content):
-        return Person(content, openId)
+        return QueryHandler(content, **kwargs)
     elif salesNumRe.match(content):
-        return AddSalersNum(content, openId)
+        return AddSaleHandler(content, **kwargs)
     else:
-        return ErrorM(content, openId)
+        return ErrorHandler(content, **kwargs)
 
 
-class BaseRes(object):
+class BaseHandler(object):
 
-    def __init__(self, content, openId):
+    def __init__(self, db, content, **kwargs):
+        self._db = db
         self._content = content
-        self._openId = openId
+        if "openId" in kwargs:
+            self._openId = kwargs.pop("openId")
         self._msgId = None
 
     def save_message(self):
         message = ReceiveMessage(content=self._content, openId=self._openId)
-        db.session.add(message)
-        db.session.flush()
+        self._db.session.add(message)
+        self._db.session.flush()
         self._msgId = message.id
 
     def get_message(self):
-        return "OK"
+        return "无合适处理流程"
 
 
-class Statement(BaseRes):
+class StatementHandler(BaseHandler):
 
     def get_message(self):
         sumList = SalesRecord.sum_sales()
@@ -50,26 +52,27 @@ class Statement(BaseRes):
         return message
 
 
-class AddSalersNum(BaseRes):
+class AddSaleHandler(BaseHandler):
 
     def get_message(self):
         name, sales = self._content.split()
         # 首先存入销售记录
 
         rd = SalesRecord(saler=name, saleNum=int(sales), messageId=self._msgId)
-        db.session.add(rd)
-        db.session.commit()
+        self._db.session.add(rd)
+        self._db.session.commit()
 
         sign = "加" if int(sales) > 0 else "减" 
         return f"操作成功\n{name} 今日销售额 {sign} {abs(int(sales))}"
 
 
-class Person(BaseRes):
+class QueryHandler(BaseHandler):
 
-    pass
+    def get_message(self):
+        return "query"
 
 
-class ErrorM(BaseRes):
+class ErrorHandler(BaseHandler):
 
     def get_message(self):
         return "error"

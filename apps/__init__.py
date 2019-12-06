@@ -1,5 +1,5 @@
 import logging
-import platform
+import os
 from flask import Flask
 
 from configs import Config, configMap
@@ -26,10 +26,8 @@ def create_app(configName):
 
 
 def cerate_logger(app):
-    if platform.platform().startswith("Windows"):
-        path = "web.log"
-    else:
-        path = "/var/log/web/web.log"
+    path = app.config.get("LOGGER_PATH")
+
     fileHandler = logging.FileHandler(path)
     fileHandler.setLevel(logging.DEBUG)
     logFormat = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - line: %(lineno)s \n%(message)s')
