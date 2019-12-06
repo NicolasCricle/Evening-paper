@@ -1,7 +1,7 @@
 import traceback
 import hashlib
 
-from flask import request, current_app, make_response
+from flask import request, current_app, make_response, jsonify
 
 from . import wechat
 from .utils import ReplyMessage
@@ -11,7 +11,8 @@ from .models import db
 
 @wechat.route("/index")
 def index():
-    return "test route"
+
+    return "test route!"
 
 
 @wechat.route("/message", methods=["GET", "POST"])

@@ -1,11 +1,21 @@
 import datetime
+import sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+from sqlalchemy.sql.expression import cast
 
 
 db = SQLAlchemy()
 
 
-class SalesRecord(db.Model):
+class BaseModel(db.Model):
+    """
+    设置字符集等一些公共属性
+    """
+    __abstract__ = True
+
+
+class SalesRecord(BaseModel):
     """
     筛选出来的符合条件的销售记录
     """
@@ -22,22 +32,19 @@ class SalesRecord(db.Model):
 
     @classmethod
     def sum_sales(cls):
-        rds = cls.query.filter(cls.date==datetime.date.today()).all()
-        temp = dict()
-        for rd in rds:
-            if rd.saler in temp:
-                temp[rd.saler] += rd.saleNum
-            else:
-                temp[rd.saler] = rd.saleNum
+        # sqlalchemy 分组查询测试 cast 映射 Decimal 字段为 Integer
+        queryFields = [
+            cls.saler,
+            cast(func.sum(cls.saleNum), sqlalchemy.Integer).label("salesNum")
+        ]
+        filterFields = [
+            cls.date == datetime.date.today()
+        ]
 
-        sumList = [{"saler": name, "salesNum": salesNum} for name, salesNum in temp.items()]
+        return db.session.query(*queryFields).filter(*filterFields).group_by(cls.saler).order_by("salesNum").all()
 
-        sorted(sumList, key=lambda x: x.get("salesNum"))
-        return sumList
-
-        
-
-class ReceiveMessage(db.Model):
+    
+class ReceiveMessage(BaseModel):
     """
     接受的微信端消息记录
     """
@@ -52,7 +59,7 @@ class ReceiveMessage(db.Model):
     sales = db.relationship("SalesRecord",backref='message', uselist=False)
 
 
-class DailyReport(db.Model):
+class DailyReport(BaseModel):
     """
     当天是否要发送报告
     """
