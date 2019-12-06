@@ -45,10 +45,13 @@ class StatementHandler(BaseHandler):
 
     def get_message(self):
         sumList = SalesRecord.sum_sales()
+        
         message = ""
         for item in sumList:
+            item = item._asdict()
             message += f'{item.get("saler")}今天的销售额是：{item.get("salesNum")}\n'
         if not message: message = "今日暂无销售额"
+
         return message
 
 
@@ -70,11 +73,13 @@ class QueryHandler(BaseHandler):
 
     def get_message(self):
         rds = SalesRecord.sales_record(self._content)
+        
         messages = ""
         for item in rds:
+            item = item._asdict()
             messages += f'{item.get("saler")}\t{item.get("saleNum")}\t{item.get("createTime")}\n'
-
         if not messages: messages = f'{self._content} 今日暂无销售记录'
+        
         return messages
 
 
