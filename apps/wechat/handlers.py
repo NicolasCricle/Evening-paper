@@ -69,7 +69,13 @@ class AddSaleHandler(BaseHandler):
 class QueryHandler(BaseHandler):
 
     def get_message(self):
-        return "query"
+        rds = SalesRecord.sales_record(self._content)
+        messages = ""
+        for item in rds:
+            messages += f'{item.get("saler")}\t{item.get("saleNum")}\t{item.get("createTime")}\n'
+
+        if not messages: messages = f'{self._content} 今日暂无销售记录'
+        return messages
 
 
 class ErrorHandler(BaseHandler):

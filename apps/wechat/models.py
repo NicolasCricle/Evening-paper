@@ -43,6 +43,21 @@ class SalesRecord(BaseModel):
 
         return db.session.query(*queryFields).filter(*filterFields).group_by(cls.saler).order_by("salesNum").all()
 
+
+    @classmethod
+    def sales_record(cls, saler):
+        """ 获取当天的销售添加记录 """
+        queryFields = [
+            cls.saler,
+            cls.saleNum,
+            cls.createTime
+        ]
+        filterFields = [
+            cls.date == datetime.date.today(),
+            cls.saler == saler
+        ]
+        return db.session.query(*queryFields).filter(*filterFields).all()
+
     
 class ReceiveMessage(BaseModel):
     """
