@@ -35,14 +35,12 @@ def message():
             return e
     # 消息处理
     else:
+        reply = ReplyMessage(request)
         try:
-            reply = ReplyMessage(request)
-
             handler = dispatch(db, reply.receiveContent, openId=reply.fromWho)
             handler.save_message()
 
             reply.text = handler.get_message()
-
         except Exception as e:
             current_app.logger.error(traceback.format_exc())
             db.session.rollback()

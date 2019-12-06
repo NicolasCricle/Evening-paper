@@ -14,7 +14,7 @@ class ReplyMessage(WechatMessage):
 
     def __init__(self, request):
         super().__init__(request)
-        self.init_xml()
+        self.init_xml(request)
         self._xml = None
 
     def init_xml(self, request):
