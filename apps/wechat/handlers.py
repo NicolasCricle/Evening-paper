@@ -13,13 +13,13 @@ salesNumRe = re.compile(Regex.SALES_NUM_REGEX)
 
 def dispatch(db, content, **kwargs):
     if content == "今日":
-        return StatementHandler(content, **kwargs)
+        return StatementHandler(db, content, **kwargs)
     elif salerRe.match(content):
-        return QueryHandler(content, **kwargs)
+        return QueryHandler(db, content, **kwargs)
     elif salesNumRe.match(content):
-        return AddSaleHandler(content, **kwargs)
+        return AddSaleHandler(db, content, **kwargs)
     else:
-        return ErrorHandler(content, **kwargs)
+        return ErrorHandler(db, content, **kwargs)
 
 
 class BaseHandler(object):
