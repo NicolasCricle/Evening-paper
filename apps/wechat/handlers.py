@@ -77,7 +77,7 @@ class QueryHandler(BaseHandler):
         messages = ""
         for item in rds:
             item = item._asdict()
-            messages += f'{item.get("saler")}\t{item.get("saleNum")}\t{item.get("createTime")}\n'
+            messages += f'{item.get("saler")}\t{item.get("saleNum")}\t{item.get("createTime").time()}\n'
         if not messages: messages = f'{self._content} 今日暂无销售记录'
         
         return messages
