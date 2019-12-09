@@ -62,8 +62,6 @@ def salesNum():
     if not result:
         return jsonify(data={})
     
-    result = result._asdict()
-    
     resList = list()
     for item in result:
         temp = item._asdict()
