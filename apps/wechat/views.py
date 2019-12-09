@@ -68,7 +68,7 @@ def salesNum():
 
         data = {
             "saler": temp.get("saler"),
-            "salesNum": temp.get("salersNum")
+            "salesNum": temp.get("salesNum")
         }
 
         resList.append(data)
