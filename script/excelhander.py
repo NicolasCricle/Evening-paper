@@ -5,6 +5,8 @@ import xlwings
 from openpyxl.utils import get_column_letter
 from PIL import ImageGrab, Image, ImageChops
 
+from myrequest import MyRequest
+
 
 class ExcelWorker(object):
     BASE_PATH           = r"C:/Users/livis/Desktop/pic/demo.xlsx"
@@ -118,6 +120,10 @@ class ExcelWorker(object):
                 continue
             self.get_pic(sheet, index, self.PIC_DIR)
 
+    @staticmethod
+    def _get_sales_num():
+        return MyRequest().get_sales_num()
+
     def run(self):
         """
         执行函数
@@ -125,13 +131,19 @@ class ExcelWorker(object):
         row = self._get_start_row()
         column = self._get_start_column()
 
+        salesList = self._get_sales_num()
+
         while True:
             readCell = self.get_cell(row, column)
-            if readCell.value:
-                salesNum = input(f"{readCell.value}\t的销售额为：")
 
-                writeCell = self.get_cell(row, self._get_column(self.today))
-                self.write_cell(writeCell, salesNum)
+            if not readCell.value:
+                return
+
+            for item in salesList:
+                if readCell.value == item.get("saler"):
+                    salesNum = item.get("salesNum")
+                    writeCell = self.get_cell(row, self._get_column(self.today))
+                    self.write_cell(writeCell, salesNum)
 
             else:
                 break

@@ -58,7 +58,6 @@ class SalesRecord(BaseModel):
         return db.session.query(*queryFields).filter(*filterFields).all()
 
 
-    
 class ReceiveMessage(BaseModel):
     """
     接受的微信端消息记录
