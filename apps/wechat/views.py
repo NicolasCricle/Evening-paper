@@ -63,9 +63,16 @@ def salesNum():
         return jsonify(data={})
     
     result = result._asdict()
-    data = {
-        "saler": saler,
-        "salesNum": result.get("salersNum")
-    }
+    
+    resList = list()
+    for item in result:
+        temp = item._asdict()
 
-    return jsonify(data=data)
+        data = {
+            "saler": temp.get("saler"),
+            "salesNum": temp.get("salersNum")
+        }
+
+        resList.append(data)
+
+    return jsonify(data=resList)
