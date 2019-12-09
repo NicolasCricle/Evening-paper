@@ -65,6 +65,7 @@ def salesNum():
     resList = list()
     for item in result:
         temp = item._asdict()
+        current_app.logger.info(temp)
 
         data = {
             "saler": temp.get("saler"),

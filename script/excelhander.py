@@ -145,9 +145,6 @@ class ExcelWorker(object):
                     writeCell = self.get_cell(row, self._get_column(self.today))
                     self.write_cell(writeCell, salesNum)
 
-            else:
-                break
-
             row += 1
         
         self.get_used_range()
