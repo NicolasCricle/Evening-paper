@@ -6,7 +6,7 @@ from flask import request, current_app, make_response, jsonify
 from . import wechat
 from .utils import ReplyMessage
 from .handlers import dispatch
-from .models import db
+from .models import db, SalesRecord
 
 
 @wechat.route("/index")
@@ -51,3 +51,21 @@ def message():
         response.content_type = 'application/xml'
 
         return response
+
+
+@wechat.route("/statement")
+def salesNum():
+    """
+    获取销售人员当天的销售额
+    """
+    result = SalesRecord.sum_sales()
+    if not result:
+        return jsonify(data={})
+    
+    result = result._asdict()
+    data = {
+        "saler": saler,
+        "salesNum": result.get("salersNum")
+    }
+
+    return jsonify(data=data)

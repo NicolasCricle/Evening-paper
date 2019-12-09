@@ -27,7 +27,6 @@ class SalesRecord(BaseModel):
     createTime = db.Column(db.DateTime, default=datetime.datetime.now)
     date = db.Column(db.Date, default=datetime.date.today)
 
-    # userId = db.Column(db.Integer, db.ForeignKey('MyUser.id'))
     messageId = db.Column(db.Integer, db.ForeignKey('ReceiveMessage.id'))
 
     @classmethod
@@ -57,6 +56,7 @@ class SalesRecord(BaseModel):
             cls.saler == saler
         ]
         return db.session.query(*queryFields).filter(*filterFields).all()
+
 
     
 class ReceiveMessage(BaseModel):

@@ -1,4 +1,5 @@
 import re
+import datetime
 from apps.wechat.models import SalesRecord, ReceiveMessage, DailyReport
 
 
@@ -14,6 +15,8 @@ salesNumRe = re.compile(Regex.SALES_NUM_REGEX)
 def dispatch(db, content, **kwargs):
     if content == "今日":
         return StatementHandler(db, content, **kwargs)
+    elif content == "发送":
+        return DailyHandler(db, content, **kwargs)
     elif salerRe.match(content):
         return QueryHandler(db, content, **kwargs)
     elif salesNumRe.match(content):
@@ -83,7 +86,19 @@ class QueryHandler(BaseHandler):
         return messages
 
 
+class DailyHandler(BaseHandler):
+
+    def get_message(self):
+        dailyRd = DailyReport(date=datetime.date.today(), isReport=True)
+        self._db.session.add(dailyRd)
+        self._db.session.commit()
+        return "今日晚报将在 10：45定时发送"
+
+
 class ErrorHandler(BaseHandler):
 
     def get_message(self):
         return "error"
+
+
+
