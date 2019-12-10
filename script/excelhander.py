@@ -1,4 +1,6 @@
 import time
+import json
+import os
 from datetime import datetime
 
 import xlwings
@@ -6,10 +8,11 @@ from openpyxl.utils import get_column_letter
 from PIL import ImageGrab, Image, ImageChops
 
 from myrequest import MyRequest
+from mailhandler import MyMail
 
 
 class ExcelWorker(object):
-    BASE_PATH           = r"C:/Users/livis/Desktop/pic/demo.xlsx"
+    BASE_PATH           = r"C:/Users/livis/Desktop/pic/销售.xlsx"
     PIC_DIR             = "C:/Users/livis/Desktop/pic/"
     SHEET_NAME          = "CC每日进账明细"
     START_ROW           = 6
@@ -124,6 +127,20 @@ class ExcelWorker(object):
     def _get_sales_num():
         return MyRequest().get_sales_num()
 
+    @staticmethod
+    def get_send_pic():
+        files = list()
+        for file in os.listdir(ExcelWorker.PIC_DIR):
+            if file.endswith(".jpg"):
+                files.append(os.path.join(ExcelWorker.PIC_DIR, file))
+        
+        return files
+    
+    @staticmethod
+    def send_mail():
+        files = ExcelWorker.get_send_pic()
+        MyMail(*files).run()
+
     def run(self):
         """
         执行函数
@@ -137,7 +154,7 @@ class ExcelWorker(object):
             readCell = self.get_cell(row, column)
 
             if not readCell.value:
-                return
+                break
 
             for item in salesList:
                 if readCell.value == item.get("saler"):
@@ -149,6 +166,9 @@ class ExcelWorker(object):
         
         self.get_used_range()
         self.save()
+
+        self.send_mail()
+
 
 
 if __name__ == "__main__":

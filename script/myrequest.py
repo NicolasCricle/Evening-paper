@@ -1,7 +1,7 @@
 import requests
 
 
-class MyRequest(requests):
+class MyRequest(object):
 
     BASE_URL = "http://121.40.164.201/wechat/statement"
 
@@ -15,4 +15,4 @@ class MyRequest(requests):
             print(e)
             return
         else:
-            return res.json()
+            return res.json().get("data")
